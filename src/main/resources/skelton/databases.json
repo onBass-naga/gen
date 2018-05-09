@@ -1,0 +1,9 @@
+{
+  "databases": [
+    {
+      "url": "jdbc:postgresql://localhost:5432/test-db",
+      "user": "postgres",
+      "password": "postgres"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "destinations": [".dist"],
+  "overwrite": false
+}
