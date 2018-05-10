@@ -2,6 +2,7 @@ package com.areab.gen.loader
 
 import com.areab.gen.meta.Database
 import com.fasterxml.jackson.databind.ObjectMapper
+import groovy.transform.Canonical
 
 class DatabaseConfigLoader {
     static List<Database> load(String filePath) {
@@ -12,6 +13,7 @@ class DatabaseConfigLoader {
     }
 }
 
+@Canonical
 class DatabaseConfig {
     List<Database> databases
 }

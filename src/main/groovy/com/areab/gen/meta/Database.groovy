@@ -1,8 +1,10 @@
 package com.areab.gen.meta
 
+import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 
 @CompileStatic
+@Canonical
 class Database {
     String url
     String user

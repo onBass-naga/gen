@@ -102,6 +102,12 @@ class MetaGenerator {
 }
 
 @Canonical
+class DatabaseMeta {
+    String databaseName
+    List<Table> tables
+}
+
+@Canonical
 class Table {
     String tableName
     List<Column> columns
