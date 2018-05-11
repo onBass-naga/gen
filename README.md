@@ -57,3 +57,21 @@ root
 - mapping.json
 
 - dist: 成果物を格納するデフォルトディレクトリ（自動生成）
+
+### テンプレート
+
+Velocityを使用
+
+```
+$!{option.package}
+
+$!{option.importFixed}
+$!{option.importNeeded}
+
+case class ${_.w($table.tableName).c2UC()}(
+#foreach($c in ${table.columns})
+    ${c.columnName}: ${c.dataType} ${_.printIf($c.isNullable, $c.columnDefault)}${_.printIf($foreach.hasNext, ",")}
+#end
+
+) $!{option.extends}
+```

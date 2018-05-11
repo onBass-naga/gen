@@ -2,6 +2,7 @@ package com.areab.gen.meta
 
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
+import groovy.transform.TupleConstructor
 import jp.sf.amateras.mirage.SqlManager
 import jp.sf.amateras.mirage.StringSqlResource
 import jp.sf.amateras.mirage.session.Session
@@ -102,25 +103,22 @@ class MetaGenerator {
 }
 
 @Canonical
+@TupleConstructor
 class DatabaseMeta {
     String databaseName
     List<Table> tables
 }
 
 @Canonical
+@TupleConstructor
 class Table {
     String tableName
     List<Column> columns
     List<PrimaryKey> primaryKeys
-
-    Table(String tableName, List<Column> columns, List<PrimaryKey> primaryKeys) {
-        this.tableName = tableName
-        this.columns = columns
-        this.primaryKeys = primaryKeys
-    }
 }
 
 @Canonical
+@TupleConstructor
 class Column {
     String columnName
     Integer ordinalPosition
@@ -131,6 +129,7 @@ class Column {
 }
 
 @Canonical
+@TupleConstructor
 class PrimaryKey {
     String columnName
     Integer ordinalPosition
