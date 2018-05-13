@@ -1,9 +1,7 @@
 package com.areab.gen.rendering
 
-import com.areab.gen.meta.DatabaseMeta
-import com.areab.gen.meta.Table
+import com.areab.gen.services.Table
 import com.google.common.base.CaseFormat
-import groovy.transform.Canonical
 import org.apache.velocity.Template
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.Velocity
@@ -13,29 +11,6 @@ import org.jboss.dna.common.text.Inflector
 class VelocityRenderer {
 
     private static Helper helper = new Helper()
-
-    static String render(String templateFilePath, DatabaseMeta meta) {
-
-        StringWriter writer = new StringWriter()
-
-        try {
-
-            Velocity.init()
-
-            VelocityContext context = new VelocityContext()
-            context.put("database", meta)
-
-            Template template = Velocity.getTemplate(
-                    templateFilePath, "UTF-8")
-            template.merge(context, writer)
-            return writer.toString()
-
-        } catch (Exception e) {
-            throw new RuntimeException(e)
-        } finally {
-            writer.flush()
-        }
-    }
 
     static String render(String templateFilePath, Table table) {
 

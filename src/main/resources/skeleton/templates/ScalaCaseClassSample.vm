@@ -1,0 +1,8 @@
+## ${_C.Package}
+
+case class ${_.w($table.tableName).c2UC()}(
+#foreach($c in ${table.columns})
+    ${c.columnName}: ${c.dataType} ${_.printIf($c.isNullable, $c.columnDefault)}${_.printIf($foreach.hasNext, ",")}
+#end
+
+)

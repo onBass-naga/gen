@@ -1,19 +1,20 @@
-package com.areab.gen.loader
+package com.areab.gen.db
 
-import com.areab.gen.meta.Database
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.Canonical
 
 class DatabaseConfigLoader {
-    static List<Database> load(String filePath) {
+    static List<DBSetting> load(String filePath) {
         def config = new File(filePath).text
         ObjectMapper mapper = new ObjectMapper()
         def databaseConfig = mapper.readValue(config, DatabaseConfig.class)
-        databaseConfig.databases
+        databaseConfig.databaseSettings
     }
 }
 
 @Canonical
 class DatabaseConfig {
-    List<Database> databases
+    @JsonProperty("databases")
+    List<DBSetting> databaseSettings
 }

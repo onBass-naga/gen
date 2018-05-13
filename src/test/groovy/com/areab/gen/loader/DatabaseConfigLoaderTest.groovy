@@ -1,5 +1,6 @@
 package com.areab.gen.loader
 
+import com.areab.gen.db.DatabaseConfigLoader
 import org.junit.Test
 
 import static org.junit.Assert.*

@@ -1,11 +1,11 @@
-package com.areab.gen.meta
+package com.areab.gen.db
 
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 
 @CompileStatic
 @Canonical
-class Database {
+class DBSetting {
     String url
     String user
     String password
