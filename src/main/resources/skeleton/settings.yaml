@@ -3,7 +3,7 @@
 #####################################
 
 outputDirectory: "./.dist"
-tablesDirectory: "./tables"
+tablesDirectory: "./workspace/tables"
 filename:
   pattern: "${tableName}Dao.scala"
   tablename:

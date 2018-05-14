@@ -14,8 +14,6 @@ class VelocityRenderer {
 
     static String render(String templateFilePath, Table table, Map<String, String> constants) {
 
-        Object.mixin(StringCategory)
-
         StringWriter writer = new StringWriter()
 
         try {
@@ -85,14 +83,6 @@ class ScriptBuilder {
         gs.evaluate(script) as String
     }
 }
-
-@Category(Object)
-class StringCategory {
-    String hello() {
-        "hello world"
-    }
-}
-
 
 class StringWrapper {
     private String value
