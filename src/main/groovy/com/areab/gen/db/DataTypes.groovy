@@ -67,61 +67,71 @@ enum DataTypes {
 
 
 enum ScalaDefaultMapping {
-    ARRAY(DataTypes.ARRAY,"AnyArray"),
-    BIGINT(DataTypes.BIGINT,"Long"),
-    BINARY(DataTypes.BINARY,"ByteArray"),
-    BIT(DataTypes.BIT,"Boolean"),
-    BLOB(DataTypes.BLOB,"Blob"),
-    BOOLEAN(DataTypes.BOOLEAN,"Boolean"),
-    CHAR(DataTypes.CHAR,"String"),
-    CLOB(DataTypes.CLOB,"Clob"),
-    DATALINK(DataTypes.DATALINK,"Any"),
-    DATE(DataTypes.DATE,"LocalDate"),
-    DECIMAL(DataTypes.DECIMAL,"BigDecimal"),
-    DISTINCT(DataTypes.DISTINCT,"Any"),
-    DOUBLE(DataTypes.DOUBLE,"Double"),
-    FLOAT(DataTypes.FLOAT,"Float"),
-    INTEGER(DataTypes.INTEGER,"Int"),
-    JAVA_OBJECT(DataTypes.JAVA_OBJECT, "Any"),
-    LONGVARBINARY(DataTypes.LONGVARBINARY,"ByteArray"),
-    LONGVARCHAR(DataTypes.LONGVARCHAR,"String"),
-    LONGNVARCHAR(DataTypes.LONGNVARCHAR,"String"),
-    NCHAR(DataTypes.NCHAR,"String"),
-    NCLOB(DataTypes.NCLOB,"Any"),
-    NULL(DataTypes.NULL,"Any"),
-    NUMERIC(DataTypes.NUMERIC,"BigDecimal"),
-    NVARCHAR(DataTypes.NVARCHAR,"String"),
-    OTHER(DataTypes.OTHER,"Any"),
-    REAL(DataTypes.REAL,"Float"),
-    REF(DataTypes.REF,"Ref"),
-    ROWID(DataTypes.ROWID,"Any"),
-    REF_CURSOR(DataTypes.REF_CURSOR, "Any"),
-    SMALLINT(DataTypes.SMALLINT,"Short"),
-    STRUCT(DataTypes.STRUCT,"Struct"),
-    SQLXML(DataTypes.SQLXML,"Any"),
-    TIME(DataTypes.TIME,"LocalTime"),
-    TIME_WITH_TIMEZONE(DataTypes.TIME_WITH_TIMEZONE, "ZonedTime"),
-    TIMESTAMP(DataTypes.TIMESTAMP,"LocalDateTime"),
-    TIMESTAMP_WITH_TIMEZONE(DataTypes.TIMESTAMP_WITH_TIMEZONE, "ZonedDateTime"),
-    TINYINT(DataTypes.TINYINT,"Byte"),
-    VARBINARY(DataTypes.VARBINARY,"ByteArray"),
-    VARCHAR(DataTypes.VARCHAR,"String"),
+    ARRAY(DataTypes.ARRAY,"Array[Any]", null, "Array[Any]()"),
+    BIGINT(DataTypes.BIGINT,"Long", null, "0L"),
+    BINARY(DataTypes.BINARY,"ByteArray", null, "Array[Byte]()"),
+    BIT(DataTypes.BIT,"Boolean", null, "false"),
+    BLOB(DataTypes.BLOB,"Blob","java.sql.Blob", "null"),
+    BOOLEAN(DataTypes.BOOLEAN,"Boolean",null, "false"),
+    CHAR(DataTypes.CHAR,"String",null, "\"\""),
+    CLOB(DataTypes.CLOB,"Clob","java.sql.Clob", "null"),
+    DATALINK(DataTypes.DATALINK,"Any",null, "null"),
+    DATE(DataTypes.DATE,"LocalDate","java.time.LocalDate", "LocalDate.now"),
+    DECIMAL(DataTypes.DECIMAL,"BigDecimal",null, "BigDecimal(\"0\")"),
+    DISTINCT(DataTypes.DISTINCT,"Any",null, "null"),
+    DOUBLE(DataTypes.DOUBLE,"Double",null, "0.0"),
+    FLOAT(DataTypes.FLOAT,"Float",null, "0"),
+    INTEGER(DataTypes.INTEGER,"Int",null, "0"),
+    JAVA_OBJECT(DataTypes.JAVA_OBJECT, "Any",null, "null"),
+    LONGVARBINARY(DataTypes.LONGVARBINARY,"ByteArray",null, "Array[Byte]()"),
+    LONGVARCHAR(DataTypes.LONGVARCHAR,"String",null, "\"\""),
+    LONGNVARCHAR(DataTypes.LONGNVARCHAR,"String",null, "\"\""),
+    NCHAR(DataTypes.NCHAR,"String",null, "\"\""),
+    NCLOB(DataTypes.NCLOB,"Any",null, "null"),
+    NULL(DataTypes.NULL,"Any",null, "null"),
+    NUMERIC(DataTypes.NUMERIC,"BigDecimal",null, "BigDecimal(\"0\")"),
+    NVARCHAR(DataTypes.NVARCHAR,"String",null, "\"\""),
+    OTHER(DataTypes.OTHER,"Any",null, "null"),
+    REAL(DataTypes.REAL,"Float",null, "0"),
+    REF(DataTypes.REF,"Ref","java.sql.Ref", "null"),
+    ROWID(DataTypes.ROWID,"Any",null, "null"),
+    REF_CURSOR(DataTypes.REF_CURSOR, "Any",null, "null"),
+    SMALLINT(DataTypes.SMALLINT,"Short",null, "0"),
+    STRUCT(DataTypes.STRUCT,"Struct","java.sql.Struct", "null"),
+    SQLXML(DataTypes.SQLXML,"Any",null, "null"),
+    TIME(DataTypes.TIME,"LocalTime","java.time.LocalTime", "LocalTime.now"),
+    TIME_WITH_TIMEZONE(DataTypes.TIME_WITH_TIMEZONE, "Any",null, "null"),
+    TIMESTAMP(DataTypes.TIMESTAMP,"LocalDate","java.time.LocalDate", "LocalDate.now"),
+    TIMESTAMP_WITH_TIMEZONE(DataTypes.TIMESTAMP_WITH_TIMEZONE, "ZonedDateTime","java.time.ZonedDateTime", "ZonedDateTime.now"),
+    TINYINT(DataTypes.TINYINT,"Byte",null, "1"),
+    VARBINARY(DataTypes.VARBINARY,"ByteArray",null, "Array[Byte]()"),
+    VARCHAR(DataTypes.VARCHAR,"String",null, "\"\""),
 
-    UNKNOWN(DataTypes.UNKNOWN,"Any")
+    UNKNOWN(DataTypes.UNKNOWN,"Any",null, "null")
 
     private DataTypes dataType
-    private String className
+    private String classDefinition
+    private String importDefinition
+    private String defaultValue
 
-    ScalaDefaultMapping(DataTypes dataType, String className) {
+    ScalaDefaultMapping(DataTypes dataType, String classDefinition, String importDefinition, String defaultValue) {
         this.dataType = dataType
-        this.className = className
+        this.classDefinition = classDefinition
+        this.importDefinition = importDefinition
+        this.defaultValue = defaultValue
     }
 
     String getTypeName() {
         this.dataType.typeName
     }
-    String getClassName() {
-        this.className
+    String getClassDefinition() {
+        this.classDefinition
+    }
+    String getImportDefinition() {
+        this.importDefinition
+    }
+    String getDefaultValue() {
+        this.defaultValue
     }
 }
 

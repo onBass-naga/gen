@@ -1,7 +1,6 @@
 package com.areab.gen.db
 
 import com.areab.gen.Constants
-import com.areab.gen.services.Database
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import groovy.transform.Canonical
@@ -37,23 +36,24 @@ class DefaultMappingWriter {
 
     static MappingWrapper mapping() {
         def map = ScalaDefaultMapping.values().collect { m ->
-            new Mapping(m.typeName, m.className)
+            new TypeMapping(m.typeName, m.classDefinition, m.importDefinition, m.defaultValue)
         }
 
         new MappingWrapper(map)
-//        ["typeMapping", map]
     }
 }
 
 @Canonical
 @TupleConstructor
 class MappingWrapper {
-    List<Mapping> typeMapping
+    List<TypeMapping> typeMapping
 }
 
 @Canonical
 @TupleConstructor
-class Mapping {
+class TypeMapping {
     String columnType
-    String className
+    String classDefinition
+    String importDefinition
+    String defaultValue
 }
