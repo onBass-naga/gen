@@ -12,17 +12,21 @@ class VelocityRenderer {
 
     private static Helper helper = new Helper()
 
-    static String render(String templateFilePath, Table table) {
+    static String render(String templateFilePath, Table table, Map<String, String> constants) {
+
+        Object.mixin(StringCategory)
 
         StringWriter writer = new StringWriter()
 
         try {
-
             Velocity.init()
 
             VelocityContext context = new VelocityContext()
             context.put("table", table)
             context.put("_", helper)
+            context.put("C", constants)
+
+            println("get: " + constants.get("Package"))
 
             Template template = Velocity.getTemplate(
                     templateFilePath, "UTF-8")
@@ -37,6 +41,7 @@ class VelocityRenderer {
     }
 }
 
+
 class Helper {
     String printIf(Boolean condition, String str) {
         condition ? str : ""
@@ -45,13 +50,54 @@ class Helper {
     StringWrapper w(String value) {
         new StringWrapper(value)
     }
+
+    ScriptBuilder script(String script) {
+        new ScriptBuilder(script)
+    }
+}
+
+class ScriptBuilder {
+
+    private String script
+    private List<String> args = []
+
+    ScriptBuilder(String script) {
+        this.script = script
+    }
+
+    ScriptBuilder(String script, List<String> args) {
+        this.script = script
+        this.args = args
+    }
+
+    ScriptBuilder argument(String variableName, String value) {
+        this.args.addAll([variableName, value])
+        new ScriptBuilder(this.script, this.args)
+    }
+
+    String apply() {
+        Binding bind = new Binding()
+        Iterator ite = args.iterator()
+        while(ite.hasNext()) {
+            bind.setVariable(ite.next(), ite.next())
+        }
+        GroovyShell gs = new GroovyShell(bind)
+        gs.evaluate(script) as String
+    }
+}
+
+@Category(Object)
+class StringCategory {
+    String hello() {
+        "hello world"
+    }
 }
 
 
 class StringWrapper {
     private String value
 
-    StringWrapper(String value){
+    StringWrapper(String value) {
         this.value = value
     }
 

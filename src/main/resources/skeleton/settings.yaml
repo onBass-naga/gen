@@ -1,0 +1,13 @@
+#####################################
+# Settings
+#####################################
+
+outputDirectory: "./.dist"
+tablesDirectory: "./tables"
+filename:
+  pattern: "${tableName}Dao.scala"
+  tablename:
+    # UpperCamel, lowerCamel, UPPER_SNAKE, lower_snake, UPPER-KEBAB, lower-kebab
+    caseStyle: UpperCamel
+    # singularize, pluralize, none
+    inflector: singularize

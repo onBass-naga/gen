@@ -2,7 +2,10 @@ package com.areab.gen.services
 
 import com.areab.gen.DefaultSetting
 import com.areab.gen.rendering.ArtifactWriter
+import com.areab.gen.rendering.ConstantsLoader
 import com.areab.gen.rendering.DatabaseMetaLoader
+import com.areab.gen.rendering.FilenameSetting
+import com.areab.gen.rendering.SettingsLoader
 import com.areab.gen.rendering.StringWrapper
 import com.areab.gen.rendering.VelocityRenderer
 import groovy.transform.Canonical
@@ -25,17 +28,40 @@ class ArtifactGenerator {
         def outputDirectoryPath = createOutputDirectory(option)
 
         def meta = DatabaseMetaLoader.load(option.tablesFile)
+        def constants = ConstantsLoader.load(option.constantsFile)
+        def settings = SettingsLoader.load(option.settingsFile)
+
         meta.tables.each { table ->
-            def result = VelocityRenderer.render(option.templateFile, table)
+            def result = VelocityRenderer.render(option.templateFile, table, constants)
             println(result)
-            String name = new StringWrapper(table.tableName).c2US().singularize().toString()
-            ArtifactWriter.write(outputDirectoryPath, result, "${name}.scala")
+            String filename = name(table, settings.filename)
+            ArtifactWriter.write(outputDirectoryPath, result, filename)
         }
+    }
+
+    String name(Table table, FilenameSetting setting) {
+
+        String caseStyle = setting.tablename.caseStyle
+        StringWrapper org = new StringWrapper(table.tableName)
+        StringWrapper styled = caseStyle == "UpperCamel" ? org.c2UC()
+                : caseStyle == "lowerCamel" ? org.c2LC()
+                : caseStyle == "UPPER_SNAKE" ? org.c2US()
+                : caseStyle == "lower_snake" ? org.c2LS()
+                : caseStyle == "UPPER-KEBAB" ? org.c2UK()
+                : caseStyle == "lower-kebab" ? org.c2LK()
+                : org
+
+        String inflector = setting.tablename.inflector
+        String tableName = inflector == "singularize" ? styled.singularize().toString()
+                : inflector == "pluralize" ? styled.pluralize().toString()
+                : styled.toString()
+
+        setting.pattern.replace('${tableName}', tableName)
     }
 
     Path createOutputDirectory(ArtifactGeneratorOption option) {
 
-        String outputDirectory = option ? option.outputDirectory
+        String outputDirectory = option.outputDirectory ? option.outputDirectory
                 : DefaultSetting.artifactOutputDirectory
 
         try {
@@ -58,4 +84,6 @@ class ArtifactGeneratorOption {
     String outputDirectory
     String tablesFile
     String templateFile
+    String constantsFile
+    String settingsFile
 }
