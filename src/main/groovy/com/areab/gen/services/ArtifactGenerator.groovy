@@ -31,7 +31,9 @@ class ArtifactGenerator {
         def constants = ConstantsLoader.load(option.constantsFile)
         def settings = SettingsLoader.load(option.settingsFile)
 
-        meta.tables.each { table ->
+        def ignores = settings.ignoreTables
+        meta.tables.findAll { !ignores.contains(it.tableName) }
+                .each { table ->
             def result = VelocityRenderer.render(option.templateFile, table, constants)
             println(result)
             String filename = name(table, settings.filename)

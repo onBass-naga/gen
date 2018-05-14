@@ -29,6 +29,7 @@ class Settings {
     String outputDirectory
     String tablesDirectory
     FilenameSetting filename
+    List<String> ignoreTables
 }
 
 @Canonical

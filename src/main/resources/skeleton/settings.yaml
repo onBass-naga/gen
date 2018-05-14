@@ -11,3 +11,4 @@ filename:
     caseStyle: UpperCamel
     # singularize, pluralize, none
     inflector: singularize
+ignoreTables: ["schema_version"]
