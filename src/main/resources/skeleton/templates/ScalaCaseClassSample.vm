@@ -1,8 +1,9 @@
-${_C.Package}
+${C.Package}
 
 case class ${_.w($table.tableName).c2UC()}(
 #foreach($c in ${table.columns})
     #set($columnName = $_.w($c.columnName).c2LC())
-    ${columnName}: #if($c.isNullable)Option[${c.dataType}]#else${c.dataType}#end${_.printIf($foreach.hasNext, ",")}
+    #set($clazz = ${M.classDefinition($c.dataType)})
+    ${columnName}: #if($c.isNullable)Option[${clazz}]#else${clazz}#end${_.printIf($foreach.hasNext, ",")}
 #end
 )

@@ -12,6 +12,7 @@ class Constants {
     static final String TEMPLATE_FILE = "--template"
     static final String CONSTANTS_FILE = "--constants"
     static final String SETTINGS_FILE = "--settings"
+    static final String MAPPING_FILE = "--mapping"
 
     static final String DATABASE_SETTING_FILE_NAME = "databases.json"
     static final String DATABASE_SETTING_FILE_SAMPLE_RESOURCE = "skeleton/${DATABASE_SETTING_FILE_NAME}"

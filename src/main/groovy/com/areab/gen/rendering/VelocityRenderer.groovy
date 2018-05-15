@@ -1,5 +1,7 @@
 package com.areab.gen.rendering
 
+import com.areab.gen.db.MappingWrapper
+import com.areab.gen.db.TypeMapping
 import com.areab.gen.services.Table
 import com.google.common.base.CaseFormat
 import org.apache.velocity.Template
@@ -12,7 +14,7 @@ class VelocityRenderer {
 
     private static Helper helper = new Helper()
 
-    static String render(String templateFilePath, Table table, Map<String, String> constants) {
+    static String render(String templateFilePath, Table table, Map<String, String> constants, MappingWrapper mapping) {
 
         StringWriter writer = new StringWriter()
 
@@ -23,6 +25,7 @@ class VelocityRenderer {
             context.put("table", table)
             context.put("_", helper)
             context.put("C", constants)
+            context.put("M", new TypeMapper(mapping))
 
             println("get: " + constants.get("Package"))
 
@@ -51,6 +54,30 @@ class Helper {
 
     ScriptBuilder script(String script) {
         new ScriptBuilder(script)
+    }
+}
+
+class TypeMapper {
+
+    private Map<String, TypeMapping> map
+
+    TypeMapper(MappingWrapper wrapper) {
+        map = new HashMap<>()
+        wrapper.typeMapping.each { it ->
+            map.put(it.columnType, it)
+        }
+    }
+
+    String classDefinition(String columnType) {
+        map.get(columnType)?.classDefinition
+    }
+
+    String importDefinition(String columnType) {
+        map.get(columnType)?.importDefinition
+    }
+
+    String defaultValue(String columnType) {
+        map.get(columnType)?.defaultValue
     }
 }
 

@@ -80,13 +80,14 @@ class GenerateCommand implements Command {
         String tablesFile = options.get(Constants.TABLES_FILE)
         String templateFile = options.get(Constants.TEMPLATE_FILE)
         String constantsFile = options.get(Constants.CONSTANTS_FILE)
+        String mappingFile = options.get(Constants.MAPPING_FILE)
         // TODO: settingsを指定した場合は他のオプションは取らないように変更する
         String settingsFile = options.get(Constants.SETTINGS_FILE)
         if (outputDirectory?.startsWith("~")) {
             throw new RuntimeException("You cannot use a path that start with '~'.")
         }
 
-        option = new ArtifactGeneratorOption(outputDirectory, tablesFile, templateFile, constantsFile, settingsFile)
+        option = new ArtifactGeneratorOption(outputDirectory, tablesFile, templateFile, constantsFile, settingsFile, mappingFile)
     }
 
     void run() {

@@ -7,6 +7,7 @@ import com.areab.gen.rendering.DatabaseMetaLoader
 import com.areab.gen.rendering.FilenameSetting
 import com.areab.gen.rendering.SettingsLoader
 import com.areab.gen.rendering.StringWrapper
+import com.areab.gen.rendering.TypeMappingLoader
 import com.areab.gen.rendering.VelocityRenderer
 import groovy.transform.Canonical
 import groovy.transform.TupleConstructor
@@ -30,11 +31,12 @@ class ArtifactGenerator {
         def meta = DatabaseMetaLoader.load(option.tablesFile)
         def constants = ConstantsLoader.load(option.constantsFile)
         def settings = SettingsLoader.load(option.settingsFile)
+        def typeMapping = TypeMappingLoader.load(option.mappingFile)
 
         def ignores = settings.ignoreTables
         meta.tables.findAll { !ignores.contains(it.tableName) }
                 .each { table ->
-            def result = VelocityRenderer.render(option.templateFile, table, constants)
+            def result = VelocityRenderer.render(option.templateFile, table, constants, typeMapping)
             println(result)
             String filename = name(table, settings.filename)
             ArtifactWriter.write(outputDirectoryPath, result, filename)
@@ -88,4 +90,5 @@ class ArtifactGeneratorOption {
     String templateFile
     String constantsFile
     String settingsFile
+    String mappingFile
 }
