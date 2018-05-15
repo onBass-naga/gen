@@ -2,6 +2,7 @@ package com.areab.gen.rendering
 
 import com.areab.gen.db.MappingWrapper
 import com.areab.gen.db.TypeMapping
+import com.areab.gen.services.Column
 import com.areab.gen.services.Table
 import com.google.common.base.CaseFormat
 import org.apache.velocity.Template
@@ -12,20 +13,19 @@ import org.jboss.dna.common.text.Inflector
 
 class VelocityRenderer {
 
-    private static Helper helper = new Helper()
-
     static String render(String templateFilePath, Table table, Map<String, String> constants, MappingWrapper mapping) {
 
         StringWriter writer = new StringWriter()
 
         try {
             Velocity.init()
+            def mapper = new TypeMapper(mapping)
 
             VelocityContext context = new VelocityContext()
             context.put("table", table)
-            context.put("_", helper)
+            context.put("_", new Helper(table.columns, mapper))
             context.put("C", constants)
-            context.put("M", new TypeMapper(mapping))
+            context.put("M", mapper)
 
             println("get: " + constants.get("Package"))
 
@@ -44,6 +44,29 @@ class VelocityRenderer {
 
 
 class Helper {
+
+    private importDefinitions = []
+
+    Helper(List<Column> columns, TypeMapper mapper) {
+        def definitios = columns
+                .collect { it ->
+                    mapper.importDefinition(it.dataType)
+                }
+                .findAll { it -> it != null }
+                .unique()
+
+        this.importDefinitions = definitios
+                .collect {it -> "import $it"}
+    }
+
+    String printImportDefinitions() {
+        this.importDefinitions.join("\n")
+    }
+
+    boolean hasImportDefinitions() {
+        !this.importDefinitions.isEmpty()
+    }
+
     String printIf(Boolean condition, String str) {
         condition ? str : ""
     }
@@ -103,7 +126,7 @@ class ScriptBuilder {
     String apply() {
         Binding bind = new Binding()
         Iterator ite = args.iterator()
-        while(ite.hasNext()) {
+        while (ite.hasNext()) {
             bind.setVariable(ite.next(), ite.next())
         }
         GroovyShell gs = new GroovyShell(bind)

@@ -1,4 +1,8 @@
 ${C.Package}
+#if($_.hasImportDefinitions())
+
+    ${_.printImportDefinitions()}
+#end
 
 case class ${_.w($table.tableName).c2UC()}(
 #foreach($c in ${table.columns})
