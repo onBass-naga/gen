@@ -56,11 +56,13 @@ class WorkspaceGenerator {
     }
 
     void copyFromResources(String from, File dest) {
-        String databaseSampleFilePath = this.getClass()
-                .getClassLoader()
-                .getResource(from)
-                .getPath()
-        Files.copy(Paths.get(databaseSampleFilePath), dest.toPath())
+        InputStream input = null
+        try {
+            input = this.class.getClassLoader().getResourceAsStream(from)
+            Files.copy(input, dest.toPath())
+        } finally {
+            input?.close()
+        }
     }
 
     Path createWorkspace(WorkspaceGeneratorOption option) {
