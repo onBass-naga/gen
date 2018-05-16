@@ -20,10 +20,11 @@ class VelocityRenderer {
         try {
             Velocity.init()
             def mapper = new TypeMapper(mapping)
+            constants.put("importDefinitions", importDefinitions(table.columns, mapper))
 
             VelocityContext context = new VelocityContext()
             context.put("table", table)
-            context.put("_", new Helper(table.columns, mapper))
+            context.put("_", new Helper())
             context.put("C", constants)
             context.put("M", mapper)
 
@@ -40,38 +41,27 @@ class VelocityRenderer {
             writer.close()
         }
     }
+
+    static String importDefinitions(List<Column> columns, TypeMapper mapper) {
+        columns.collect { it ->
+                    mapper.importDefinition(it.dataType)
+                }
+                .findAll { it -> it != null }
+                .collect {it -> "import $it"}
+                .unique()
+                .sort()
+                .join("\n")
+    }
 }
 
 
 class Helper {
 
-    private importDefinitions = []
-
-    Helper(List<Column> columns, TypeMapper mapper) {
-        def definitios = columns
-                .collect { it ->
-                    mapper.importDefinition(it.dataType)
-                }
-                .findAll { it -> it != null }
-                .unique()
-
-        this.importDefinitions = definitios
-                .collect {it -> "import $it"}
-    }
-
-    String printImportDefinitions() {
-        this.importDefinitions.join("\n")
-    }
-
-    boolean hasImportDefinitions() {
-        !this.importDefinitions.isEmpty()
-    }
-
     String printIf(Boolean condition, String str) {
         condition ? str : ""
     }
 
-    StringWrapper w(String value) {
+    StringWrapper W(String value) {
         new StringWrapper(value)
     }
 

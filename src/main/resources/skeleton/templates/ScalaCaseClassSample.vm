@@ -1,12 +1,12 @@
-${C.Package}
-#if($_.hasImportDefinitions())
+${C.Package}.$C.databaseName
+#if($C.importDefinitions.length() > 0)
 
-    ${_.printImportDefinitions()}
+    ${C.importDefinitions}
 #end
 
-case class ${_.w($table.tableName).c2UC()}(
+case class ${_.W($table.tableName).c2UC()}(
 #foreach($c in ${table.columns})
-    #set($columnName = $_.w($c.columnName).c2LC())
+    #set($columnName = $_.W($c.columnName).c2LC())
     #set($clazz = ${M.classDefinition($c.dataType)})
     ${columnName}: #if($c.isNullable)Option[${clazz}]#else${clazz}#end${_.printIf($foreach.hasNext, ",")}
 #end
