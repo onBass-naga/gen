@@ -30,6 +30,9 @@ class ArtifactGenerator {
 
         def meta = DatabaseMetaLoader.load(option.tablesFile)
         def constants = ConstantsLoader.load(option.constantsFile)
+        constants.put("databaseName", meta.databaseName)
+        constants.put("schema", meta.schema)
+        
         def settings = SettingsLoader.load(option.settingsFile)
         def typeMapping = TypeMappingLoader.load(option.mappingFile)
 
