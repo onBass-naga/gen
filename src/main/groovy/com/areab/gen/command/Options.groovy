@@ -1,5 +1,6 @@
 package com.areab.gen.command
 
+import com.areab.gen.Constants
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 
@@ -7,7 +8,9 @@ class OptionParser {
 
     static CommandOption parse(Commands command, List<String> optionArgs) {
 
-        CommandOption option = optionArgs.inject(new CommandOption()) { result, arg ->
+        def args = optionArgs.isEmpty() ? defaultOption() : optionArgs
+
+        CommandOption option = args.inject(new CommandOption()) { result, arg ->
             String[] dim = arg.split("=")
             Options type = Options.of(dim[0])
             switch (type) {
@@ -22,6 +25,10 @@ class OptionParser {
         }
 
         return option
+    }
+
+    private static defaultOption() {
+        ["${Options.SETTINGS.optionKey}=${Constants.DEFAULT_WORKSPACE_PATH}/${Constants.SETTING_FILE_NAME}"]
     }
 
     private static CommandOption setSettingFileProperties(CommandOption option, String filePath, Commands command) {
@@ -108,6 +115,10 @@ enum Options {
         this.shortKey = shortKey
         this.fieldName = fieldName
         this.convertFs = convertFs
+    }
+
+    String getOptionKey() {
+        return this.optionKey
     }
 
     String getFieldName() {
