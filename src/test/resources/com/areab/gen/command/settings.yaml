@@ -2,7 +2,7 @@
 # Settings
 #####################################
 
-# Overwrite, Skip, Error
+# Overwrite, Error
 conflictResolution: Overwrite
 
 tableInfo:
@@ -11,14 +11,14 @@ tableInfo:
 
 generate:
   tableFiles: ["./workspace/tables/generated1.json", "./workspace/tables/generated2.json"]
-  ignoreTables: ["schema_version", "flyway_schema_history"]
+  ignoreTables: ["schema_version", "some_table"]
 
   template: "./workspace/templates/ScalaCaseClassSample.vm"
   constants: "./workspace/constants.json"
   mapping: "./workspace/mapping.json"
   outputDirectory: "./.dist"
   fileName:
-    pattern: "${tableName}.scala"
+    pattern: "${tableName}Dao.scala"
     tableName:
       # UpperCamel, lowerCamel, UPPER_SNAKE, lower_snake, UPPER-KEBAB, lower-kebab
       caseStyle: UpperCamel

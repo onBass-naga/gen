@@ -13,7 +13,8 @@ import org.jboss.dna.common.text.Inflector
 
 class VelocityRenderer {
 
-    static String render(String templateFilePath, Table table, Map<String, String> constants, MappingWrapper mapping) {
+    static String render(String templateFilePath, Table table, Map<String, String> constants,
+                         MappingWrapper mapping) {
 
         StringWriter writer = new StringWriter()
 

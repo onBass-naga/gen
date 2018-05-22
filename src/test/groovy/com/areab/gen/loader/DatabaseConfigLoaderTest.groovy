@@ -1,6 +1,6 @@
 package com.areab.gen.loader
 
-import com.areab.gen.db.DatabaseConfigLoader
+import com.areab.gen.command.DatabaseConfigLoader
 import org.junit.Ignore
 import org.junit.Test
 

@@ -2,9 +2,8 @@
 
 ## 概要
 
-Databaseのメタデータからいろいろ作成する
-メタデータはjson形式で保持する
-複数DBにアクセス可能
+- Databaseから取得したテーブル/カラム情報をjsonに書き出す
+- Velocityテンプレートエンジンをベースにしたテンプレートを元にファイルを生成する
 
 
 ### command
@@ -12,51 +11,49 @@ Databaseのメタデータからいろいろ作成する
 #### init
 
 ```
-$ java -jar gen.jar init ${path/to/workspace}
+$ java -jar gen.jar init
 ```
+
 デフォルトはjavaコマンド実行ディレクトリに`workspace`ディレクトリを生成
 設定ファイルのスケルトンも作成
 
-#### meta
-databases.jsonの設定を元にmetadataを取得し、json化する
-
 ```
-$ java -jar gen.jar meta ${path/to/databases.json} ${path/to/dist}
+$ java -jar gen.jar init --outputDirectory=${path/to/dist}
 ```
 
-.metaディレクトリを作成し、データベース名.meta.jsonを生成する
+outputDirectory オプションで出力先を設定できる
+
+
+#### table info
+
+databases.jsonにて指定されたDBへ接続し、取得したテーブル/カラム情報をjsonに書き出す
+
+```
+$ java -jar gen.jar tableInfo
+```
+
+オプションを指定しない場合は`./workspace/settings.json`の設定を使用して処理を行う
+
+```
+$ java -jar gen.jar tableInfo --settings=${path/to/settings.json}
+$ java -jar gen.jar tableInfo --databases=${path/to/databases.json} --outputDirectory=${path/to/dist}
+```
+
+オプションを使用できる
 
 #### generate
 
+databases.jsonにて指定されたDBへ接続し、取得したテーブル/カラム情報をjsonに書き出す
 
-- パッケージ
-- ファイル名
-- import: Typeによって可変 or implicitなど固定
--
+```
+$ java -jar gen.jar tableInfo
+```
 
-metaから生成
-- databaseName: UpperCamel, lowerCamel
-- tableName:
-- columnName:
-- nullable: true or false
-- defaultValue
+オプションを指定しない場合は`./workspace/settings.json`の設定を使用して処理を行う
 
 
-### ディレクトリ
 
-root
-- .meta: テーブル名・カラム名・カラムの型・プライマリーキー
 
-- task
-- templates
-  - defaults
-  - scala
-  - groovy
-
-- database.json
-- mapping.json
-
-- dist: 成果物を格納するデフォルトディレクトリ（自動生成）
 
 ### テンプレート
 

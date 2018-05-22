@@ -1,14 +1,8 @@
 package com.areab.gen.services
 
-import com.areab.gen.DefaultSetting
-import com.areab.gen.rendering.ArtifactWriter
-import com.areab.gen.rendering.ConstantsLoader
-import com.areab.gen.rendering.DatabaseMetaLoader
-import com.areab.gen.rendering.FilenameSetting
-import com.areab.gen.rendering.SettingsLoader
-import com.areab.gen.rendering.StringWrapper
-import com.areab.gen.rendering.TypeMappingLoader
-import com.areab.gen.rendering.VelocityRenderer
+import com.areab.gen.command.CaseStyle
+import com.areab.gen.command.Inflector
+import com.areab.gen.rendering.*
 import groovy.transform.Canonical
 import groovy.transform.TupleConstructor
 import org.slf4j.Logger
@@ -24,59 +18,60 @@ class ArtifactGenerator {
 
     void execute(ArtifactGeneratorOption option) {
 
-        logger.info("ArtifactGenerator: $option")
+        logger.debug("ArtifactGenerator: $option")
 
         def outputDirectoryPath = createOutputDirectory(option)
-
-        def meta = DatabaseMetaLoader.load(option.tablesFile)
-        def constants = ConstantsLoader.load(option.constantsFile)
-        constants.put("databaseName", meta.databaseName)
-        constants.put("schema", meta.schema)
-        
-        def settings = SettingsLoader.load(option.settingsFile)
         def typeMapping = TypeMappingLoader.load(option.mappingFile)
 
-        def ignores = settings.ignoreTables
-        meta.tables.findAll { !ignores.contains(it.tableName) }
-                .each { table ->
-            def result = VelocityRenderer.render(option.templateFile, table, constants, typeMapping)
-            println(result)
-            String filename = name(table, settings.filename)
-            ArtifactWriter.write(outputDirectoryPath, result, filename)
+        option.tableFiles.each { it ->
+            def meta = DatabaseMetaLoader.load(it)
+
+            def constants = ConstantsLoader.load(option.constantsFile)
+            constants.put("databaseName", meta.databaseName)
+            constants.put("schema", meta.schema)
+
+            def ignores = option.ignoreTables
+            meta.tables.findAll { !ignores.contains(it.tableName) }
+                    .each { table ->
+                def result = VelocityRenderer.render(option.templateFile, table, constants, typeMapping)
+
+                logger.debug(result)
+                
+                String filename = name(table, option)
+                ArtifactWriter.write(outputDirectoryPath, result, filename)
+            }
         }
     }
 
-    String name(Table table, FilenameSetting setting) {
+    String name(Table table, ArtifactGeneratorOption option) {
 
-        String caseStyle = setting.tablename.caseStyle
         StringWrapper org = new StringWrapper(table.tableName)
-        StringWrapper styled = caseStyle == "UpperCamel" ? org.c2UC()
-                : caseStyle == "lowerCamel" ? org.c2LC()
-                : caseStyle == "UPPER_SNAKE" ? org.c2US()
-                : caseStyle == "lower_snake" ? org.c2LS()
-                : caseStyle == "UPPER-KEBAB" ? org.c2UK()
-                : caseStyle == "lower-kebab" ? org.c2LK()
+        CaseStyle caseStyle = option.caseStyle
+        StringWrapper styled = caseStyle == CaseStyle.UPPER_CAMEL ? org.c2UC()
+                : caseStyle == CaseStyle.LOWER_CAMEL ? org.c2LC()
+                : caseStyle == CaseStyle.UPPER_SNAKE ? org.c2US()
+                : caseStyle == CaseStyle.LOWER_SNAKE ? org.c2LS()
+                : caseStyle == CaseStyle.UPPER_KEBAB ? org.c2UK()
+                : caseStyle == CaseStyle.LOWER_KEBAB ? org.c2LK()
                 : org
 
-        String inflector = setting.tablename.inflector
-        String tableName = inflector == "singularize" ? styled.singularize().toString()
-                : inflector == "pluralize" ? styled.pluralize().toString()
+        Inflector inflector = option.inflector
+        String tableName = inflector == Inflector.SINGULARIZE ? styled.singularize().toString()
+                : Inflector.PLURALIZE ? styled.pluralize().toString()
                 : styled.toString()
 
-        setting.pattern.replace('${tableName}', tableName)
+        option.fileNamePattern.replace('${tableName}', tableName)
     }
 
     Path createOutputDirectory(ArtifactGeneratorOption option) {
 
-        String outputDirectory = option.outputDirectory ? option.outputDirectory
-                : DefaultSetting.artifactOutputDirectory
+        String outputDirectory = option.outputDirectory
 
         try {
             Path path = Paths.get(outputDirectory)
-            if (option?.outputDirectory && !Files.exists(path)) {
-                throw new RuntimeException("Not exists: ${outputDirectory}")
-            }
-
+//            if (option?.outputDirectory && !Files.exists(path)) {
+//                throw new RuntimeException("Not exists: ${outputDirectory}")
+//            }
             Files.createDirectories(path)
 
         } catch (IOException e) {
@@ -89,9 +84,14 @@ class ArtifactGenerator {
 @TupleConstructor
 class ArtifactGeneratorOption {
     String outputDirectory
-    String tablesFile
+    List<String> tableFiles
+    List<String> ignoreTables
+
     String templateFile
     String constantsFile
-    String settingsFile
     String mappingFile
+
+    String fileNamePattern
+    CaseStyle caseStyle
+    Inflector inflector
 }

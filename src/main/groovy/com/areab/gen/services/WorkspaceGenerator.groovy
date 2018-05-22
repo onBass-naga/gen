@@ -1,7 +1,7 @@
 package com.areab.gen.services
 
 import com.areab.gen.Constants
-import com.areab.gen.DefaultSetting
+import com.areab.gen.command.ConflictResolution
 import com.areab.gen.db.DefaultMappingWriter
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
@@ -20,7 +20,7 @@ class WorkspaceGenerator {
 
     void execute(WorkspaceGeneratorOption option) {
 
-        logger.info("WorkspaceGenerator: ${option}")
+        logger.debug("WorkspaceGenerator: ${option}")
 
         Path workspace = createWorkspace(option)
 
@@ -67,18 +67,13 @@ class WorkspaceGenerator {
 
     Path createWorkspace(WorkspaceGeneratorOption option) {
 
-        String workspaceDirectory = option ? option.workspaceDirectory
-                : DefaultSetting.workspaceDirectory
-
         try {
-            Path path = Paths.get(workspaceDirectory)
-            if (Files.exists(path)) {
-                throw new RuntimeException("Path already exist: ${workspaceDirectory}")
+            Path path = Paths.get(option.outputDirectory)
+            if (option.conflictResolution == ConflictResolution.ERROR && Files.exists(path)) {
+                throw new IllegalArgumentException("Path already exist: ${option.outputDirectory}")
             }
 
             Files.createDirectories(path)
-
-            return path
 
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e)
@@ -89,5 +84,6 @@ class WorkspaceGenerator {
 @Canonical
 @TupleConstructor
 class WorkspaceGeneratorOption {
-    String workspaceDirectory
+    String outputDirectory
+    ConflictResolution conflictResolution
 }

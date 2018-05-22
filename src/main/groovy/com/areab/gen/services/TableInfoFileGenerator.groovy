@@ -1,9 +1,9 @@
 package com.areab.gen.services
 
-import com.areab.gen.DefaultSetting
-import com.areab.gen.db.DBSetting
+import com.areab.gen.Constants
+import com.areab.gen.command.ConflictResolution
+import com.areab.gen.command.DBSetting
 import com.areab.gen.db.DataTypes
-import com.areab.gen.db.DatabaseConfigLoader
 import com.areab.gen.db.MetaWriter
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
@@ -26,12 +26,11 @@ class TableInfoFileGenerator {
 
     void execute(TableInfoFileGeneratorOption option) {
 
-        logger.info("TableInfoFileGenerator: ${option}")
+        logger.debug("TableInfoFileGenerator: ${option}")
 
-        def databaseSettings = loadConfiguration(option)
         def outputDirectoryPath = createOutputDirectory(option)
 
-        databaseSettings.each { setting ->
+        option.databaseSettings.each { setting ->
             logger.info(setting.toString())
             def database = generateTableInfoFile(setting)
             MetaWriter.write(database, outputDirectoryPath)
@@ -63,35 +62,13 @@ class TableInfoFileGenerator {
         }
     }
 
-    List<DBSetting> loadConfiguration(TableInfoFileGeneratorOption option) {
-
-        String configFilePath = option ? option.databaseConfigFile
-                : DefaultSetting.databaseConfigFile
-
-        try {
-            Path path = Paths.get(configFilePath)
-            if (option?.databaseConfigFile && !Files.exists(path)) {
-                throw new RuntimeException("Not exists : ${configFilePath}")
-            }
-
-            DatabaseConfigLoader.load(configFilePath)
-
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e)
-        }
-    }
-
     Path createOutputDirectory(TableInfoFileGeneratorOption option) {
 
         String outputDirectory = option ? option.outputDirectory
-                : DefaultSetting.tableInfoOutputDirectory
+                : Constants.DEFAULT_TABLE_INFO_OUTPUT_DIRECTORY
 
         try {
             Path path = Paths.get(outputDirectory)
-            if (option?.outputDirectory && !Files.exists(path)) {
-                throw new RuntimeException("Not exists: ${outputDirectory}")
-            }
-
             Files.createDirectories(path)
 
         } catch (IOException e) {
@@ -147,7 +124,8 @@ class TableInfoFileGenerator {
 @TupleConstructor
 class TableInfoFileGeneratorOption {
     String outputDirectory
-    String databaseConfigFile
+    List<DBSetting> databaseSettings
+    ConflictResolution conflictResolution
 }
 
 @Canonical

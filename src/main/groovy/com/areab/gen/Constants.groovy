@@ -1,18 +1,16 @@
 package com.areab.gen
 
+import com.areab.gen.command.ConflictResolution
 import groovy.transform.CompileStatic
-
 
 @CompileStatic
 class Constants {
 
-    static final String OPTION_KEY_WORKSPACE_DIRECTORY = "--workspace"
-    static final String OUTPUT_DIRECTORY = "--output"
-    static final String TABLES_FILE = "--tables"
-    static final String TEMPLATE_FILE = "--template"
-    static final String CONSTANTS_FILE = "--constants"
-    static final String SETTINGS_FILE = "--settings"
-    static final String MAPPING_FILE = "--mapping"
+    static final String DEFAULT_WORKSPACE_PATH = "./workspace"
+    static final ConflictResolution DEFAULT_CONFLICT_RESOLUTION = ConflictResolution.OVERWRITE
+    static final String DEFAULT_TABLE_INFO_OUTPUT_DIRECTORY = "./workspace/tables"
+    static final String DEFAULT_ARTIFACT_OUTPUT_DIRECTORY = "./.dist"
+    static final String DEFAULT_ARTIFACT_FILENAME_PATTERN = '${tableName}.scala'
 
     static final String DATABASE_SETTING_FILE_NAME = "databases.json"
     static final String DATABASE_SETTING_FILE_SAMPLE_RESOURCE = "/skeleton/${DATABASE_SETTING_FILE_NAME}"

@@ -1,0 +1,14 @@
+#####################################
+# Settings
+#####################################
+
+# Overwrite, Error
+conflictResolution: Overwrite
+
+tableInfo:
+  databases: "./workspace/databases.json"
+  outputDirectory: "./workspace"
+
+generate:
+  ignoreTables: ["overwrite_table"]
+  template: "./workspace/templates/Dao.vm"

@@ -1,5 +1,7 @@
 package com.areab.gen
 
+import com.areab.gen.command.Command
+import com.areab.gen.command.CommandFactory
 import groovy.transform.CompileStatic
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
