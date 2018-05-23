@@ -4,7 +4,8 @@ ${C.Package}.$C.databaseName
     ${C.importDefinitions}
 #end
 
-case class ${_.W($table.tableName).c2UC()}(
+#set($className = $_.W($table.tableName).c2UC().singularize())
+case class ${className}(
 #foreach($c in ${table.columns})
     #set($columnName = $_.W($c.columnName).c2LC())
     #set($clazz = ${M.classDefinition($c.dataType)})

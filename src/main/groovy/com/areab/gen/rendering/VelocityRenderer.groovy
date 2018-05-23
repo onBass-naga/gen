@@ -8,7 +8,7 @@ import com.google.common.base.CaseFormat
 import org.apache.velocity.Template
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.Velocity
-import org.jboss.dna.common.text.Inflector
+import org.modeshape.common.text.Inflector
 
 
 class VelocityRenderer {
@@ -127,6 +127,7 @@ class ScriptBuilder {
 
 class StringWrapper {
     private String value
+    private Inflector inflector = new Inflector()
 
     StringWrapper(String value) {
         this.value = value
@@ -199,7 +200,7 @@ class StringWrapper {
      * ex) boxes => box
      */
     StringWrapper singularize() {
-        String converted = Inflector.getInstance().singularize(this.value)
+        String converted = inflector.singularize(this.value)
         new StringWrapper(converted)
     }
 
@@ -208,7 +209,7 @@ class StringWrapper {
      * ex) box => boxes
      */
     StringWrapper pluralize() {
-        String converted = Inflector.getInstance().pluralize(this.value)
+        String converted = inflector.pluralize(this.value)
         new StringWrapper(converted)
     }
 

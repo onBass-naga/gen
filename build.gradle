@@ -32,7 +32,7 @@ dependencies {
 	compile('org.codehaus.groovy:groovy')
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
 	compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
-	compile group: 'org.jboss.dna', name: 'dna-common', version: '0.7'
+	compile group: 'org.modeshape', name: 'modeshape-common', version: '5.4.1.Final'
 	compile group: 'org.yaml', name: 'snakeyaml', version: '1.21'
 	compile group: 'org.apache.velocity', name: 'velocity', version: '1.7'
 	compile group: 'com.google.guava', name: 'guava', version: '25.0-jre'
