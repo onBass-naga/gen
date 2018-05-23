@@ -4,6 +4,9 @@ import com.areab.gen.Constants
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 
+import java.nio.file.CopyOption
+import java.nio.file.StandardCopyOption
+
 class OptionParser {
 
     static CommandOption parse(Commands command, List<String> optionArgs) {
@@ -162,13 +165,19 @@ class CommandOption {
 }
 
 enum ConflictResolution {
-    OVERWRITE("Overwrite"),
-    ERROR("Error")
+    OVERWRITE("Overwrite", StandardCopyOption.REPLACE_EXISTING),
+    ERROR("Error", null)
 
     private String code
+    private CopyOption copyOption
 
-    ConflictResolution(String code) {
+    ConflictResolution(String code, CopyOption copyOption) {
         this.code = code
+        this.copyOption = copyOption
+    }
+
+    CopyOption getCopyOption() {
+        this.copyOption
     }
 
     static ConflictResolution of(String code) {
