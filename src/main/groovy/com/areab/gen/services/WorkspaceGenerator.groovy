@@ -3,6 +3,7 @@ package com.areab.gen.services
 import com.areab.gen.Constants
 import com.areab.gen.command.ConflictResolution
 import com.areab.gen.db.DefaultMappingWriter
+import com.areab.gen.utils.FileUtils
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 import groovy.transform.TupleConstructor
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory
 import java.nio.file.CopyOption
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 @CompileStatic
@@ -73,19 +73,8 @@ class WorkspaceGenerator {
         }
     }
 
-    Path createWorkspace(WorkspaceGeneratorOption option) {
-
-        try {
-            Path path = Paths.get(option.outputDirectory)
-            if (option.conflictResolution == ConflictResolution.ERROR && Files.exists(path)) {
-                throw new IllegalArgumentException("Path already exist: ${option.outputDirectory}")
-            }
-
-            Files.createDirectories(path)
-
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e)
-        }
+    private Path createWorkspace(WorkspaceGeneratorOption option) {
+        FileUtils.createDirectory(option.outputDirectory, option.conflictResolution)
     }
 }
 

@@ -5,15 +5,14 @@ import com.areab.gen.command.ConflictResolution
 import com.areab.gen.command.DBSetting
 import com.areab.gen.db.DataTypes
 import com.areab.gen.db.MetaWriter
+import com.areab.gen.utils.FileUtils
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic
 import groovy.transform.TupleConstructor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 import java.sql.DriverManager
@@ -67,13 +66,7 @@ class TableInfoFileGenerator {
         String outputDirectory = option ? option.outputDirectory
                 : Constants.DEFAULT_TABLE_INFO_OUTPUT_DIRECTORY
 
-        try {
-            Path path = Paths.get(outputDirectory)
-            Files.createDirectories(path)
-
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e)
-        }
+        FileUtils.createDirectory(outputDirectory, option.conflictResolution)
     }
 
     List<String> getTableNames(Connection connection, DBSetting database) {

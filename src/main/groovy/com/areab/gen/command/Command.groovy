@@ -64,7 +64,7 @@ class ExportTableInfoCommand implements Command {
         Validator.checkRequired(cmdOption.databases, 'databases')
         List<DBSetting> dbSettings = DatabaseConfigLoader.load(cmdOption.databases)
 
-        option = new TableInfoFileGeneratorOption(outputDirectory, dbSettings)
+        option = new TableInfoFileGeneratorOption(outputDirectory, dbSettings, cmdOption.conflictResolution)
     }
 
     void run() {
@@ -94,6 +94,7 @@ class GenerateCommand implements Command {
         Inflector inflector = cmdOption.inflector ? cmdOption.inflector : Inflector.SINGULARIZE
 
         option = new ArtifactGeneratorOption(
+                cmdOption.conflictResolution,
                 outputDirectory,
                 cmdOption.tableFiles,
                 ignoreTables,
@@ -135,7 +136,7 @@ class Validator {
 
 enum Commands {
     INIT("init", "i", WorkspaceInitializationCommand.class),
-    TABLE_INFO("tableInfo", "t", ExportTableInfoCommand.class),
+    TABLE_INFO("tableInfo", "ti", ExportTableInfoCommand.class),
     GENERATE("generate", "g", GenerateCommand.class)
 
     private String command

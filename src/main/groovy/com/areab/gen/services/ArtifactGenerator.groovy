@@ -1,16 +1,16 @@
 package com.areab.gen.services
 
 import com.areab.gen.command.CaseStyle
+import com.areab.gen.command.ConflictResolution
 import com.areab.gen.command.Inflector
 import com.areab.gen.rendering.*
+import com.areab.gen.utils.FileUtils
 import groovy.transform.Canonical
 import groovy.transform.TupleConstructor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 
 class ArtifactGenerator {
 
@@ -63,26 +63,15 @@ class ArtifactGenerator {
         option.fileNamePattern.replace('${tableName}', tableName)
     }
 
-    Path createOutputDirectory(ArtifactGeneratorOption option) {
-
-        String outputDirectory = option.outputDirectory
-
-        try {
-            Path path = Paths.get(outputDirectory)
-//            if (option?.outputDirectory && !Files.exists(path)) {
-//                throw new RuntimeException("Not exists: ${outputDirectory}")
-//            }
-            Files.createDirectories(path)
-
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e)
-        }
+    private Path createOutputDirectory(ArtifactGeneratorOption option) {
+        FileUtils.createDirectory(option.outputDirectory, option.conflictResolution)
     }
 }
 
 @Canonical
 @TupleConstructor
 class ArtifactGeneratorOption {
+    ConflictResolution conflictResolution
     String outputDirectory
     List<String> tableFiles
     List<String> ignoreTables

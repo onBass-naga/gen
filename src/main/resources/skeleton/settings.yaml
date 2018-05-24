@@ -2,7 +2,7 @@
 # Settings
 #####################################
 
-# Overwrite, Skip, Error
+# Overwrite, Error
 conflictResolution: Overwrite
 
 tableInfo:
