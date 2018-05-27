@@ -96,3 +96,28 @@ case class ${_.w($table.tableName).c2UC()}(
 TODO: VelocityRendererの内容を記載
 
 
+
+#### ScriptBuilder
+
+文字列をGroovyScriptとして実行し、結果をStringとして出力する。
+GroovyShellを内部的に利用している。
+
+```
+${_.script("'result: ' + (1 + 2)").apply()}
+=> result: 3
+```
+
+argument(変数名, 値)を指定することができる。
+
+```
+${_.script("'Hello ' + name + '!! at ' + new Date().format(fmt)").argument('name', 'World').argument('fmt', 'HH:mm').apply()}
+=> Hello World!! at 00:16
+```
+
+### mapping.json
+
+```
+M.classDefinition($columnType)
+M.importDefinition(columnType)
+M.defaultValue(columnType)
+```

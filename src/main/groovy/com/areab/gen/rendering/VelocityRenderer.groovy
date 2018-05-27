@@ -58,8 +58,8 @@ class VelocityRenderer {
 
 class Helper {
 
-    String printIf(Boolean condition, String str) {
-        condition ? str : ""
+    IfPrint printIf(boolean cond, String str) {
+        cond ? new IfPrint(str, true) : new IfPrint("", false)
     }
 
     StringWrapper W(String value) {
@@ -68,6 +68,32 @@ class Helper {
 
     ScriptBuilder script(String script) {
         new ScriptBuilder(script)
+    }
+}
+
+class IfPrint {
+
+    String value
+    boolean matched
+
+    IfPrint(String value, boolean matched) {
+        this.value = value
+        this.matched = matched
+    }
+
+    IfPrint orElseIf(boolean cond, String str) {
+        this.matched ? this
+                : cond ? new IfPrint(str, true)
+                : new IfPrint("", false)
+    }
+
+    IfPrint orElse(String str) {
+        this.matched ? this : new IfPrint(str, true)
+    }
+
+    @Override
+    String toString() {
+        this.value
     }
 }
 
@@ -225,6 +251,14 @@ class StringWrapper {
                     : (value.contains("-")) ? CaseFormat.LOWER_HYPHEN
                     : CaseFormat.LOWER_CAMEL
         }
+    }
+
+    boolean endWith(String str) {
+        this.value.endsWith(str)
+    }
+
+    boolean startWith(String str) {
+        this.value.startsWith(str)
     }
 
     @Override

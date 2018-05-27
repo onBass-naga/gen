@@ -7,7 +7,7 @@ conflictResolution: Overwrite
 
 tableInfo:
   databases: "./workspace/databases.json"
-  outputDirectory: "./workspace"
+  outputDirectory: "./workspace/tables"
 
 generate:
   tableFiles: ["./workspace/tables/generated1.json", "./workspace/tables/generated2.json"]
