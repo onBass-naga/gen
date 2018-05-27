@@ -31,6 +31,7 @@ interface Command {
     void run()
 }
 
+@CompileStatic
 class WorkspaceInitializationCommand implements Command {
 
     private WorkspaceGeneratorOption option
@@ -53,6 +54,7 @@ class WorkspaceInitializationCommand implements Command {
     }
 }
 
+@CompileStatic
 class ExportTableInfoCommand implements Command {
 
     private TableInfoFileGeneratorOption option
@@ -72,6 +74,7 @@ class ExportTableInfoCommand implements Command {
     }
 }
 
+@CompileStatic
 class GenerateCommand implements Command {
 
     private ArtifactGeneratorOption option
@@ -86,7 +89,6 @@ class GenerateCommand implements Command {
         Validator.checkRequired(cmdOption.template, 'template')
         Validator.checkRequired(cmdOption.mapping, 'mapping')
 
-        String constants = cmdOption.constants ? cmdOption.constants : ""
         List<String> ignoreTables = cmdOption.ignoreTables ? cmdOption.ignoreTables : []
         String fileNamePattern = cmdOption.fileNamePattern ? cmdOption.fileNamePattern
                 : Constants.DEFAULT_ARTIFACT_FILENAME_PATTERN
@@ -99,7 +101,6 @@ class GenerateCommand implements Command {
                 cmdOption.tableFiles,
                 ignoreTables,
                 cmdOption.template,
-                constants,
                 cmdOption.mapping,
                 fileNamePattern,
                 caseStyle,
@@ -112,6 +113,7 @@ class GenerateCommand implements Command {
     }
 }
 
+@CompileStatic
 class Validator {
 
     static void checkDirectory(String directoryPath) {
@@ -133,7 +135,6 @@ class Validator {
     }
 }
 
-
 enum Commands {
     INIT("init", "i", WorkspaceInitializationCommand.class),
     TABLE_INFO("tableInfo", "ti", ExportTableInfoCommand.class),
@@ -141,9 +142,9 @@ enum Commands {
 
     private String command
     private String shortCommand
-    private Class<Command> clazz
+    private Class<? extends Command> clazz
 
-    Commands(String command, String shortCommand, Class<Command> clazz) {
+    Commands(String command, String shortCommand, Class<? extends Command> clazz) {
         this.command = command
         this.shortCommand = shortCommand
         this.clazz = clazz
@@ -154,7 +155,7 @@ enum Commands {
     }
 
     static Commands of(String command) {
-        Commands type = values().find { it.command == command }
+        Commands type = values().find { it -> it.command == command }
         if (!type) {
             throw new IllegalArgumentException("Command not found: ${command}")
         }

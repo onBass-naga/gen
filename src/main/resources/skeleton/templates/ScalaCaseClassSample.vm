@@ -1,7 +1,7 @@
-${C.Package}.$C.databaseName
+com.example.entities.${C.databaseName}
 #if($C.importDefinitions.length() > 0)
 
-    ${C.importDefinitions}
+${C.importDefinitions}
 #end
 
 #set($className = $_.W($table.tableName).c2UC().singularize())

@@ -14,7 +14,6 @@ generate:
   ignoreTables: ["schema_version", "flyway_schema_history"]
 
   template: "./workspace/templates/ScalaCaseClassSample.vm"
-  constants: "./workspace/constants.json"
   mapping: "./workspace/mapping.json"
   outputDirectory: "./.dist"
   fileName:

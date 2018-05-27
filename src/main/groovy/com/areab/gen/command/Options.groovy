@@ -73,10 +73,6 @@ class OptionParser {
                 option.template = generate.template
             }
 
-            if (generate?.constants) {
-                option.constants = generate.constants
-            }
-
             if (generate?.mapping) {
                 option.mapping = generate.mapping
             }
@@ -104,7 +100,6 @@ enum Options {
     TABLE_FILES("--tableFiles", "-tf", "tableFiles", {String val -> toList(val)}),
     IGNORE_TABLES("--ignoreTables", "-it", "ignoreTables", {String val -> toList(val)}),
     TEMPLATE("--template", "-t", "template", {String val -> val}),
-    CONSTANTS("--constants", "-c", "constants", {String val -> val}),
     MAPPING("--mapping", "-m", "mapping", {String val -> val}),
     SETTINGS("--settings", "-s", "", null)
 

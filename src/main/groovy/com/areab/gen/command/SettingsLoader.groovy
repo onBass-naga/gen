@@ -36,7 +36,6 @@ class GenerateSetting {
     List<String> tableFiles
     List<String> ignoreTables
     String template
-    String constants
     String mapping
     String outputDirectory
     FileNameSetting fileName

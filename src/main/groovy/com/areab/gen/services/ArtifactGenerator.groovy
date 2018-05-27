@@ -26,9 +26,10 @@ class ArtifactGenerator {
         option.tableFiles.each { it ->
             def meta = DatabaseMetaLoader.load(it)
 
-            def constants = ConstantsLoader.load(option.constantsFile)
-            constants.put("databaseName", meta.databaseName)
-            constants.put("schema", meta.schema)
+            def constants = [
+                    databaseName: meta.databaseName,
+                    schema      : meta.schema
+            ]
 
             def ignores = option.ignoreTables
             meta.tables.findAll { !ignores.contains(it.tableName) }
@@ -36,7 +37,7 @@ class ArtifactGenerator {
                 def result = VelocityRenderer.render(option.templateFile, table, constants, typeMapping)
 
                 logger.debug(result)
-                
+
                 String filename = name(table, option)
                 ArtifactWriter.write(outputDirectoryPath, result, filename)
             }
@@ -77,7 +78,6 @@ class ArtifactGeneratorOption {
     List<String> ignoreTables
 
     String templateFile
-    String constantsFile
     String mappingFile
 
     String fileNamePattern

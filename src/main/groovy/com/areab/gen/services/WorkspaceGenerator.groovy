@@ -41,10 +41,6 @@ class WorkspaceGenerator {
             // mapping.json
             DefaultMappingWriter.write(workspace)
 
-            // constants.json
-            copyFromResources(Constants.CONSTANTS_FILE_SAMPLE_RESOURCE,
-                    new File(workspace.toFile(), Constants.CONSTANTS_FILE_NAME),
-                    copyOption)
             // settings.json
             copyFromResources(Constants.SETTING_FILE_SAMPLE_RESOURCE,
                     new File(workspace.toFile(), Constants.SETTING_FILE_NAME),
